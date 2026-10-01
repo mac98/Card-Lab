@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 
 class App extends JPanel {
@@ -65,8 +66,8 @@ class App extends JPanel {
 
     }
 
-    private static void shuffleDeck() {
-        // Implementation for shuffling the deck
+    private void shuffleDeck() {
+        Collections.shuffle(cards);
     }
 
     @Override
@@ -103,14 +104,16 @@ class App extends JPanel {
     public static void main(String[] args) throws Exception {
         JFrame frame = new JFrame("Card Game");
 
+        App app = new App();
+
         JButton button = new JButton("Reshuffle Deck");
         frame.add(button, BorderLayout.SOUTH);
 
         button.addActionListener(e -> {
-            shuffleDeck();
+            app.shuffleDeck();
         });
 
-        frame.add(new App());
+        frame.add(app);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(640, 480);
         frame.setVisible(true);
