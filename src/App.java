@@ -65,6 +65,10 @@ class App extends JPanel {
 
     }
 
+    private static void shuffleDeck() {
+        // Implementation for shuffling the deck
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -98,6 +102,13 @@ class App extends JPanel {
 
     public static void main(String[] args) throws Exception {
         JFrame frame = new JFrame("Card Game");
+
+        JButton button = new JButton("Reshuffle Deck");
+        frame.add(button, BorderLayout.SOUTH);
+
+        button.addActionListener(e -> {
+            shuffleDeck();
+        });
 
         frame.add(new App());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
