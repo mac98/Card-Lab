@@ -69,6 +69,11 @@ class App extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        //Draws Green Background
+        g.drawRect(0, 0, getWidth(), getHeight());
+        g.setColor(new Color(10, 130, 42));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
         int columns = 13;
 
         int cardWidth = 40;
