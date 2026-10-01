@@ -27,6 +27,7 @@ class App extends JPanel {
     }
 
     private void loadCards() {
+        cards.clear();
         String[] suits = { "c", "d", "h", "s" };
         for (String suit : suits) {
             for (int number = 1; number <= 13; number++) {
@@ -109,8 +110,15 @@ class App extends JPanel {
         JButton button = new JButton("Reshuffle Deck");
         frame.add(button, BorderLayout.SOUTH);
 
+        JButton resetButton = new JButton("Reset Deck");
+        frame.add(resetButton, BorderLayout.NORTH);
+
         button.addActionListener(e -> {
             app.shuffleDeck();
+        });
+
+        resetButton.addActionListener(e -> {
+            app.loadCards();
         });
 
         frame.add(app);
