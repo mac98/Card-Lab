@@ -48,6 +48,8 @@ class App extends JPanel {
     private long gameEndTime = 0;
     private long mismatchHideTime = 0;
 
+    private int finalSecondsRemaining = 0;
+
     /*
      * Represents one card in the matching game.
      *
@@ -395,6 +397,13 @@ class App extends JPanel {
 
                 gameOver = true;
                 playerWon = true;
+
+                // Freeze the timer at the moment the player wins
+                long millisecondsRemaining = gameEndTime - System.currentTimeMillis();
+
+                finalSecondsRemaining = Math.max(0,
+                        (int) Math.ceil(
+                                millisecondsRemaining / 1000.0));
             }
         }
 
@@ -558,14 +567,25 @@ class App extends JPanel {
         /*
          * Calculate remaining time.
          */
-        long millisecondsRemaining = gameEndTime
-                - System.currentTimeMillis();
+        int secondsRemaining;
 
-        int secondsRemaining = (int) Math.ceil(
-                millisecondsRemaining / 1000.0);
+        if (gameOver && playerWon) {
 
-        if (secondsRemaining < 0) {
-            secondsRemaining = 0;
+            // Keep showing the amount of time left
+            // when the player won
+            secondsRemaining = finalSecondsRemaining;
+
+        } else {
+
+            long millisecondsRemaining = gameEndTime
+                    - System.currentTimeMillis();
+
+            secondsRemaining = (int) Math.ceil(
+                    millisecondsRemaining / 1000.0);
+
+            if (secondsRemaining < 0) {
+                secondsRemaining = 0;
+            }
         }
 
         /*
