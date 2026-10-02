@@ -9,7 +9,8 @@ import java.awt.event.ActionEvent;
 
 class App extends JPanel {
 
-    private ArrayList<BufferedImage> cards = new ArrayList<>();
+    private final ArrayList<BufferedImage> cards = new ArrayList<>();
+    private final ArrayList<BufferedImage> originalOrder = new ArrayList<>();
 
     private static final int FPS = 60;
     private static final int FRAME_TIME = 1000 / FPS;
@@ -28,15 +29,24 @@ class App extends JPanel {
 
     private void loadCards() {
         cards.clear();
+        originalOrder.clear();
+
         String[] suits = { "c", "d", "h", "s" };
+
         for (String suit : suits) {
             for (int number = 1; number <= 13; number++) {
+
                 String cardNumber = String.format("%02d", number);
                 String filename = "Cards/" + suit + cardNumber + ".png";
 
                 try {
                     BufferedImage image = ImageIO.read(new File(filename));
+
                     cards.add(image);
+
+                    // Save the original position once.
+                    originalOrder.add(image);
+
                 } catch (Exception e) {
                     System.out.println("Could not load: " + filename);
                 }
@@ -71,12 +81,16 @@ class App extends JPanel {
         Collections.shuffle(cards);
     }
 
+    private void resetDeck() {
+        cards.clear();
+        cards.addAll(originalOrder);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //Draws Green Background
-        g.drawRect(0, 0, getWidth(), getHeight());
+        // Draw green background
         g.setColor(new Color(10, 130, 42));
         g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -90,6 +104,7 @@ class App extends JPanel {
 
         for (int i = 0; i < cards.size(); i++) {
             BufferedImage card = cards.get(i);
+
             int cardHeight = (int) (card.getHeight() * ((double) cardWidth / card.getWidth()));
 
             int column = i % columns;
@@ -103,27 +118,35 @@ class App extends JPanel {
     }
 
     public static void main(String[] args) throws Exception {
+
         JFrame frame = new JFrame("Card Game");
 
         App app = new App();
 
-        JButton button = new JButton("Reshuffle Deck");
-        frame.add(button, BorderLayout.SOUTH);
-
+        JButton shuffleButton = new JButton("Reshuffle Deck");
         JButton resetButton = new JButton("Reset Deck");
-        frame.add(resetButton, BorderLayout.NORTH);
+        JPanel buttonPanel = new JPanel();
 
-        button.addActionListener(e -> {
+        buttonPanel.add(shuffleButton);
+        buttonPanel.add(resetButton);
+
+        shuffleButton.addActionListener(e -> {
             app.shuffleDeck();
+            app.repaint();
         });
 
         resetButton.addActionListener(e -> {
-            app.loadCards();
+            app.resetDeck();
+            app.repaint();
         });
 
-        frame.add(app);
+        frame.setLayout(new BorderLayout());
+        frame.add(app, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(640, 480);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
